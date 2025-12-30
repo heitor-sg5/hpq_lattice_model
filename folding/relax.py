@@ -34,7 +34,7 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
         delta_E = sum(new_energy[i] - old_energy[i] for i in affected)
 
         accepted = True
-        # Metropolis acceptance criterion
+        # Metropolis acceptance criterion (using Boltzmann probability)
         if delta_E > 0 and random.random() >= math.exp(-delta_E / temperature):
             accepted = False
             # Undo move if rejected
