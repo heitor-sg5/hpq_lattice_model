@@ -1,0 +1,22 @@
+{
+  "A": { "name": "Alanine",        "hydrophobicity":  1.2,  "charge":  0 },
+  "R": { "name": "Arginine",       "hydrophobicity": -1.8,  "charge":  1 },
+  "N": { "name": "Asparagine",     "hydrophobicity": -0.8,  "charge":  0 },
+  "D": { "name": "Aspartic acid",  "hydrophobicity": -1.0,  "charge": -1 },
+  "C": { "name": "Cysteine",       "hydrophobicity":  0.8,  "charge":  0 },
+  "E": { "name": "Glutamic acid",  "hydrophobicity": -1.0,  "charge": -1 },
+  "Q": { "name": "Glutamine",      "hydrophobicity": -0.8,  "charge":  0 },
+  "G": { "name": "Glycine",        "hydrophobicity": -0.4,  "charge":  0 },
+  "H": { "name": "Histidine",      "hydrophobicity": -0.3,  "charge":  1 },
+  "I": { "name": "Isoleucine",     "hydrophobicity":  1.8,  "charge":  0 },
+  "L": { "name": "Leucine",        "hydrophobicity":  1.8,  "charge":  0 },
+  "K": { "name": "Lysine",         "hydrophobicity": -1.5,  "charge":  1 },
+  "M": { "name": "Methionine",     "hydrophobicity":  1.3,  "charge":  0 },
+  "F": { "name": "Phenylalanine",  "hydrophobicity":  2.0,  "charge":  0 },
+  "P": { "name": "Proline",        "hydrophobicity": -0.2,  "charge":  0 },
+  "S": { "name": "Serine",         "hydrophobicity": -0.6,  "charge":  0 },
+  "T": { "name": "Threonine",      "hydrophobicity": -0.4,  "charge":  0 },
+  "W": { "name": "Tryptophan",     "hydrophobicity":  1.5,  "charge":  0 },
+  "Y": { "name": "Tyrosine",       "hydrophobicity":  0.6,  "charge":  0 },
+  "V": { "name": "Valine",         "hydrophobicity":  1.6,  "charge":  0 }
+}
