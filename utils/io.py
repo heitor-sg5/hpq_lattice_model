@@ -3,9 +3,9 @@ import csv
 import json
 import hashlib
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from matplotlib.colors import Normalize
 
 # Generate hash of the sequence for unique filenames
 def hash_sequence(sequence):
@@ -43,8 +43,8 @@ def plot_3d(filename, chain=None, local_energies=None):
     # Plot hydrophobicity
     ax1 = fig.add_subplot(121, projection='3d')
     H = df["H"].values
-    norm_H = Normalize(vmin=min(H), vmax=max(H))
-    colors_H = cm.coolwarm(norm_H(H))
+    H_clipped = np.clip(H, -2.0, 2.0)
+    colors_H = cm.coolwarm((H_clipped + 2.0) / 4.0)
     ax1.scatter(df["x"], df["y"], df["z"], c=colors_H, s=50)
 
     # Connect residue points
@@ -57,18 +57,21 @@ def plot_3d(filename, chain=None, local_energies=None):
         )
 
     ax1.set_title("Residue Hydrophobicity")
-    ax1.set_xlabel("X"); ax1.set_ylabel("Y"); ax1.set_zlabel("Z")
-    mappable_H = cm.ScalarMappable(norm=norm_H, cmap="coolwarm")
+    ax1.set_xlabel("X")
+    ax1.set_ylabel("Y")
+    ax1.set_zlabel("Z")
+
+    mappable_H = cm.ScalarMappable(cmap="coolwarm")
+    mappable_H.set_array([-2.0, 2.0])
     plt.colorbar(mappable_H, ax=ax1, shrink=0.6, label="Hydrophobicity")
 
     # Plot local interaction energies
     if local_energies is not None:
-        ax2 = fig.add_subplot(122, projection='3d')
         # Map each residue index to its local energy
+        ax2 = fig.add_subplot(122, projection='3d')
         E = df["index"].map(lambda i: local_energies.get(i, 0.0)).values
-        max_abs_E = max(abs(E.min()), abs(E.max()))
-        norm_E = Normalize(vmin=-max_abs_E, vmax=max_abs_E)
-        colors_E = cm.coolwarm(norm_E(E))
+        E_clipped = np.clip(E, -1.0, 1.0)
+        colors_E = cm.coolwarm((E_clipped + 1.0) / 2.0)
         ax2.scatter(df["x"], df["y"], df["z"], c=colors_E, s=50)
 
         # Connect residue points
@@ -81,8 +84,12 @@ def plot_3d(filename, chain=None, local_energies=None):
             )
 
         ax2.set_title("Local Interaction Energy")
-        ax2.set_xlabel("X"); ax2.set_ylabel("Y"); ax2.set_zlabel("Z")
-        mappable_E = cm.ScalarMappable(norm=norm_E, cmap="coolwarm")
+        ax2.set_xlabel("X")
+        ax2.set_ylabel("Y")
+        ax2.set_zlabel("Z")
+
+        mappable_E = cm.ScalarMappable(cmap="coolwarm")
+        mappable_E.set_array([-1.0, 1.0])
         plt.colorbar(mappable_E, ax=ax2, shrink=0.6, label="Local Energy")
 
     plt.tight_layout()

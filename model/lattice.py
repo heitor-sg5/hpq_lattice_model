@@ -1,7 +1,6 @@
 class Lattice:
     def __init__(self):
-        # Occupied positions (x, y, z)
-        self.occupied = set()
+        self.occupied = set() # occupied positions (x, y, z)
 
     def is_occupied(self, position):
         return tuple(position) in self.occupied # check if a lattice position is occupied
