@@ -50,7 +50,7 @@ chain = PeptideChain(residue_props=residue_props, lattice=lattice)
 chain.initialize_linear(sequence) # place residues on a zigzag along the x-axis
 
 # Define the energy model with parameters
-energy_model = EnergyModel(alpha=0.2, eps_HH=1.0, eps_HP=0.3, eps_Q=1.0)
+energy_model = EnergyModel(alpha=0.2, eps_HH=1.0, eps_HP=0.3, eps_PP=0.1, eps_Q=1.0)
 
 # Ensure output directories exist
 os.makedirs(structure_dir, exist_ok=True)

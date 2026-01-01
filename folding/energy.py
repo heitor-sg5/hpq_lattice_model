@@ -1,8 +1,9 @@
 class EnergyModel:
-    def __init__(self, alpha=0.2, eps_HH=1.0, eps_HP=0.3, eps_Q=1.0):
+    def __init__(self, alpha=0.2, eps_HH=1.0, eps_HP=0.3, eps_PP=0.1, eps_Q=1.0):
         self.alpha = alpha # scales hydrophobic exposure energy
         self.eps_HH = eps_HH # energy gain for hydrophobic-hydrophobic contact
         self.eps_HP = eps_HP # energy penalty for hydrophobic-polar contact
+        self.eps_PP = eps_PP # energy gain for polar-polar contact
         self.eps_Q = eps_Q # energy for charge-charge interaction
 
     def pair_energy(self, a, b):
@@ -12,13 +13,17 @@ class EnergyModel:
             e -= self.eps_HH # favorable, energy decreases
         elif a.hydrophobicity > 0 or b.hydrophobicity > 0:
             e += self.eps_HP # penalty, energy increases
+        
+        # Polar intreactions
+        if a.hydrophobicity < 0 and b.hydrophobicity < 0:
+            e -= self.eps_PP # favorable, energy decreases
 
         # Charge interactions
         if a.charge != 0 and b.charge != 0:
-            if a.charge * b.charge < 0:
-                e -= self.eps_Q # opposite charges attract
-            else:
-                e += self.eps_Q # same charge repels
+            if a.charge * b.charge < 0: # opposite charge
+                e -= self.eps_Q # favorable, energy decreases
+            else: # same charge
+                e += self.eps_Q # penalty, energy increases
         return e
 
     # Compute energy (= alpha * H * exposed) due to solvent exposure
@@ -86,5 +91,5 @@ class EnergyModel:
                 if chain.lattice.is_occupied(nbr):
                     exposed -= 1
             if c.hydrophobicity > 0:
-                local[c.index] += self.alpha * c.hydrophobicity
+                local[c.index] += self.alpha * c.hydrophobicity * exposed
         return local
