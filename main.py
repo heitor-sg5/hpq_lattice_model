@@ -20,7 +20,7 @@ data_dir = "data"
 parser = argparse.ArgumentParser(description="Toy protein folding model")
 parser.add_argument("--sequence", type=str, required=True,
                     help="Peptide sequence OR name of file")
-parser.add_argument("--n_steps", type=int, default=1000) # number of simulation steps
+parser.add_argument("--steps", type=int, default=1000) # number of simulation steps
 parser.add_argument("--seed", type=int, default=42) # random seed
 args = parser.parse_args()
 
@@ -58,7 +58,7 @@ os.makedirs(log_dir, exist_ok=True)
 
 # Relax chain (folding simulation)
 trajectory = relax_chain(
-    chain, lattice, energy_model, n_steps=args.n_steps, T_start=2.0, T_end=0.5
+    chain, lattice, energy_model, n_steps=args.steps, T_start=2.0, T_end=0.5
 )
 
 # Save stepwise simulation log
@@ -79,7 +79,7 @@ move_types = [step["move_type"] for step in trajectory if "move_type" in step]
 move_counts = Counter(move_types)
 
 # Compute and print final total energy
-total_energy = energy_model.compute_total_energy(chain)
+total_energy = trajectory[-1]["total_energy"]
 print(f"Sequence: {sequence}")
 print(f"Length: {len(sequence)}")
 print(f"Final Energy: {total_energy:.2f}")

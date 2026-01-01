@@ -22,16 +22,16 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
         old_positions = {i: chain.residues[i].position for i in affected}
 
         # Compute energies before move
-        old_energy = energy_model.compute_total_energy(chain)
+        old_energy = energy_model.compute_local_energies(chain)
 
         # Apply move
         apply_move(chain, move)
 
         # Compute energies after move
-        new_energy = energy_model.compute_total_energy(chain)
+        new_energy = energy_model.compute_local_energies(chain)
 
         # Change in energy for affected residues
-        delta_E = new_energy - old_energy
+        delta_E = delta_E = sum(new_energy[i] - old_energy[i] for i in new_energy)
 
         accepted = True
         # Metropolis acceptance criterion (using Boltzmann probability)
@@ -50,7 +50,7 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
             "delta_E": delta_E,
             "accepted": accepted,
             "move_type": move["type"],
-            "total_energy": energy_model.compute_total_energy(chain),
+            "total_energy": sum(new_energy.values()) if accepted == True else sum(old_energy.values()),
             "local_energies": energy_model.compute_local_energies(chain),
             "positions": [
                 {"index": c.index, "x": c.position[0], "y": c.position[1], "z": c.position[2]}
