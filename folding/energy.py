@@ -67,3 +67,6 @@ class EnergyModel:
             # Contact energy
             local[cube.index] += self.compute_contact_energy(cube, chain, lattice, seen_pairs)
         return local
+    
+    def compute_total_energy(self, local):
+        return sum(local.values())
