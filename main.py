@@ -78,11 +78,14 @@ plot_energy_vs_steps(trajectory)
 move_types = [step["move_type"] for step in trajectory if "move_type" in step]
 move_counts = Counter(move_types)
 
-# Compute and print final total energy
+# Compute and print final and lowest total energy
 total_energy = trajectory[-1]["total_energy"]
+min_energy = min(step["total_energy"] for step in trajectory)
+
 print(f"Sequence: {sequence}")
 print(f"Length: {len(sequence)}")
 print(f"Final Energy: {total_energy:.2f}")
+print(f"Lowest Energy: {min_energy:.2f}")
 print(f"Move counts: {dict(move_counts)}")
 print(f"Structure saved to {structure_dir}")
 print(f"Logs saved to {log_dir}")
