@@ -86,7 +86,7 @@ def main():
         sequence = args.sequence
 
     if args.runs == 1:
-        result = run_simulation(
+        trajectory = run_simulation(
             sequence=sequence, 
             residue_props=residue_props, 
             steps=args.steps, 
@@ -96,17 +96,18 @@ def main():
 
         print(f"Sequence: {sequence}")
         print(f"Length: {len(sequence)}")
-        print(f"Final Energy: {result['final_energy']:.2f}")
-        print(f"Lowest Energy: {result['min_energy']:.2f}")
-        print(f"Move counts: {result['move_counts']}")
-        print(f"Runtime: {result['runtime']:.2f} seconds")
+        print(f"Final Energy: {trajectory['final_energy']:.2f}")
+        print(f"Lowest Energy: {trajectory['min_energy']:.2f}")
+        print(f"Move counts: {trajectory['move_counts']}")
+        print(f"Runtime: {trajectory['runtime']:.2f} seconds")
         print(f"Structures saved to {structure_dir}")
         print(f"Logs saved to {log_dir}")
 
     else:
+        trajectories = []
         total_runtime = time.time()
         for i in range(1, args.runs + 1):
-            result = run_simulation(
+            trajectory = run_simulation(
                 sequence=sequence,
                 residue_props=residue_props,
                 steps=args.steps,
@@ -116,10 +117,11 @@ def main():
             )
 
             print(f"Run {i}")
-            print(f"Final Energy: {result['final_energy']:.2f}")
-            print(f"Lowest Energy: {result['min_energy']:.2f}")
-            print(f"Move counts: {result['move_counts']}")
-            print(f"Runtime: {result['runtime']:.2f} seconds\n")
+            print(f"Final Energy: {trajectory['final_energy']:.2f}")
+            print(f"Lowest Energy: {trajectory['min_energy']:.2f}")
+            print(f"Move counts: {trajectory['move_counts']}")
+            print(f"Runtime: {trajectory['runtime']:.2f} seconds\n")
+            trajectories.append(trajectory)
         print(f"Runtime: {(time.time() - total_runtime):.2f} seconds\n")
 
 if __name__ == "__main__":
