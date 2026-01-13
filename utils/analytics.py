@@ -2,6 +2,8 @@ import itertools
 from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import linkage, dendrogram
+from scipy.spatial.distance import pdist
 
 # Build a contact graph from a final folded structure, where nodes are 
 # residue indexes and edges are non-bonded nearest neighbours
@@ -48,16 +50,31 @@ def contact_frequency_matrix(consensus, n_residues):
 # Plot the contact-frequency matrix as a 2D heatmap
 def plot_contact_matrix(graphs, sequence):
     n_residues = len(sequence)
+
     # Build consensus contact graph across runs
     consensus = consensus_contact_graph(graphs)
-    # Convert to matrix representation
     matrix = contact_frequency_matrix(consensus, n_residues)
-    plt.figure(figsize=(7, 6))
-    im = plt.imshow(matrix, origin="lower", cmap="viridis")
-    plt.colorbar(im, label="Contact frequency")
-    plt.xlabel("Residue index")
-    plt.ylabel("Residue index")
-    plt.title("Contact frequency matrix")
+
+    # Hierarchical clustering using scipy
+    dist = pdist(matrix, metric="correlation")
+    Z = linkage(dist, method="average")
+
+    # Labels
+    labels = [f"{aa}{i}" for i, aa in enumerate(sequence)]
+    fig, (ax_heat, ax_dendro) = plt.subplots(1, 2, figsize=(12, 6), gridspec_kw={"width_ratios": [3, 2]})
+
+    # Heatmap (sequence-ordered)
+    im = ax_heat.imshow(matrix, origin="lower", cmap="viridis")
+    ax_heat.set_title("Contact frequency matrix")
+    ax_heat.set_xlabel("Residue index")
+    ax_heat.set_ylabel("Residue index")
+    plt.colorbar(im, ax=ax_heat, label="Contact frequency")
+
+    # Cladogram
+    dendrogram(Z, orientation="left", labels=labels, ax=ax_dendro, leaf_font_size=8)
+    ax_dendro.set_xlabel("Distance")
+    ax_dendro.set_title("Contact-profile hierarchy")
+
     plt.tight_layout()
     plt.show()
 
