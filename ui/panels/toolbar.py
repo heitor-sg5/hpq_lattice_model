@@ -53,7 +53,7 @@ def toolbar(residue_props: Dict):
                 "Solvent exposure (α)", value=float(params["alpha"]), key="alpha"
             )
             params["eps_HH"] = st.number_input(
-                "Hydrophobic-Hydrophobic (εHH)", value=float(params["eps_HH"]), key="eps_HH"
+                "Hydrophobic-hydrophobic (εHH)", value=float(params["eps_HH"]), key="eps_HH"
             )
             params["eps_HP"] = st.number_input(
                 "Hydrophobic-polar (εHP)", value=float(params["eps_HP"]), key="eps_HP"

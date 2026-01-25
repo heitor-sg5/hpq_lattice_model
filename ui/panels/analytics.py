@@ -6,7 +6,6 @@ from ui.plots.temperature import plot_temperature_vs_step_interactive, plot_temp
 from ui.plots.moves import plot_moves_histogram_single, plot_moves_histogram_multi
 from ui.plots.contacts import contact_heatmap_from_runs, cladogram_from_runs
 
-
 def analytics_panel():
     """Render analytics panel with tabs for different visualizations."""
     results = st.session_state.get("results", [])
