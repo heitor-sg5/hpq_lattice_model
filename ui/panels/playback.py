@@ -1,7 +1,6 @@
-from typing import List, Dict
 import streamlit as st
 
-def playback_controls(current_trajectory: List[Dict]):
+def playback_controls(current_trajectory):
     """Render playback controls for trajectory navigation."""
     n_steps = len(current_trajectory)
     if n_steps == 0:

@@ -1,8 +1,7 @@
-from typing import List, Dict
 import numpy as np
 import plotly.graph_objects as go
 
-def plot_moves_histogram_single(result: Dict) -> go.Figure:
+def plot_moves_histogram_single(result):
     """Plot move counts histogram for a single run."""
     move_counts = result.get("move_counts", {})
     if not move_counts:
@@ -25,7 +24,7 @@ def plot_moves_histogram_single(result: Dict) -> go.Figure:
     )
     return fig
 
-def plot_moves_histogram_multi(results: List[Dict]) -> go.Figure:
+def plot_moves_histogram_multi(results):
     """Plot move counts histogram for multiple runs with error bars."""
     # Collect all move types observed across runs
     all_types = set()

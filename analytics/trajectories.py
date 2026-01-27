@@ -1,7 +1,6 @@
-from typing import List, Dict
 import pandas as pd
 
-def energy_trace_from_trajectory(trajectory: List[Dict]) -> pd.DataFrame:
+def energy_trace_from_trajectory(trajectory):
     """Extract energy trace from trajectory."""
     return pd.DataFrame(
         {

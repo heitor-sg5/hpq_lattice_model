@@ -1,9 +1,8 @@
-from typing import Dict
 import streamlit as st
 
 from core.simulation import run_simulation
 
-def run_simulations(residue_props: Dict):
+def run_simulations(residue_props):
     """Run simulations for all runs."""
     seq = st.session_state.get("sequence", "")
     params = st.session_state["params"]
@@ -31,7 +30,7 @@ def run_simulations(residue_props: Dict):
     st.session_state["current_run_index"] = 0
     st.session_state["current_step_index"] = 0
 
-def toolbar(residue_props: Dict):
+def toolbar(residue_props):
     """Render parameter toolbar."""
     params = st.session_state["params"]
 

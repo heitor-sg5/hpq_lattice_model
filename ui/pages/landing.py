@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 
 from core.validation import validate_sequence

@@ -7,7 +7,6 @@ from model.lattice import Lattice
 from folding.energy import EnergyModel
 from folding.relax import relax_chain
 from folding.moves import set_pivot_probability, PIVOT_P
-from analytics.contacts import build_contact_graph
 
 def run_simulation(
     sequence,
@@ -63,7 +62,7 @@ def run_simulation(
         eps_PP=eps_PP,
         eps_Q=eps_Q,
     )
-    trajectory = relax_chain(
+    trajectory, best_chain = relax_chain(
         chain,
         lattice,
         energy_model,
@@ -72,7 +71,7 @@ def run_simulation(
         T_end=T_end,
     )
 
-    structure = chain.get_structure()
+    structure = best_chain.get_structure()
     runtime = time.time() - start_time
 
     move_types = [step["move_type"] for step in trajectory if "move_type" in step]
@@ -81,8 +80,6 @@ def run_simulation(
     total_energy = trajectory[-1]["total_energy"]
     min_energy = min(step["total_energy"] for step in trajectory)
 
-    contact_graph = build_contact_graph(structure, lattice)
-
     return {
         "run_tag": run_tag,
         "final_energy": total_energy,
@@ -90,6 +87,5 @@ def run_simulation(
         "move_counts": dict(move_counts),
         "runtime": runtime,
         "structure": structure,
-        "trajectory": trajectory,
-        "contact_graph": contact_graph
+        "trajectory": trajectory
     }

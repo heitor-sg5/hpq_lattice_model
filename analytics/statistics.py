@@ -1,8 +1,7 @@
-from typing import Dict, List
 import numpy as np
 import pandas as pd
 
-def compute_statistics_table(results: List[Dict], sequence: str) -> pd.DataFrame:
+def compute_statistics_table(results, sequence):
     """Compute useful statistics for display."""
     stats_data = []
     

@@ -1,4 +1,3 @@
-from typing import List, Dict, Optional
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import linkage, dendrogram
 from scipy.spatial.distance import pdist
@@ -11,7 +10,7 @@ from analytics.contacts import (
     contact_frequency_matrix,
 )
 
-def contact_heatmap_from_runs(results: List[Dict], sequence: str,) -> Optional[go.Figure]:
+def contact_heatmap_from_runs(results, sequence):
     """Create contact frequency heatmap from multiple runs."""
     if not results:
         return None
@@ -40,7 +39,7 @@ def contact_heatmap_from_runs(results: List[Dict], sequence: str,) -> Optional[g
     )
     return fig
 
-def cladogram_from_runs(results: List[Dict], sequence: str,):
+def cladogram_from_runs(results, sequence):
     """Create cladogram (dendrogram) from contact patterns."""
     if not results:
         return None
@@ -72,6 +71,5 @@ def cladogram_from_runs(results: List[Dict], sequence: str,):
     fig, ax = plt.subplots(figsize=(4, 5))
     dendrogram(Z, orientation="right", labels=labels, ax=ax, leaf_font_size=8)
     ax.set_xlabel("Distance")
-    ax.set_title("Contact-profile hierarchy")
     plt.tight_layout()
     return fig

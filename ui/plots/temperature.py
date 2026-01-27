@@ -1,8 +1,7 @@
-from typing import List, Dict
 import numpy as np
 import plotly.graph_objects as go
 
-def plot_temperature_vs_step_interactive(trajectory: List[Dict]) -> go.Figure:
+def plot_temperature_vs_step_interactive(trajectory):
     """Plot temperature vs step for a single trajectory."""
     steps = [s["step"] for s in trajectory]
     temps = [s["temperature"] for s in trajectory]
@@ -23,7 +22,7 @@ def plot_temperature_vs_step_interactive(trajectory: List[Dict]) -> go.Figure:
     )
     return fig
 
-def plot_temperature_multi_runs(trajectories: List[List[Dict]]) -> go.Figure:
+def plot_temperature_multi_runs(trajectories):
     """Plot temperature vs step for multiple runs with mean and std."""
     min_len = min(len(t) for t in trajectories)
     temps = np.array(

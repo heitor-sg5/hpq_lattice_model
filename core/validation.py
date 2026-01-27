@@ -1,14 +1,5 @@
-from typing import Dict, Optional
-
-def validate_sequence(seq: str, residue_props: Dict) -> Optional[str]:
-    """
-    Validate a peptide sequence against known residue types.
-    Args:
-        seq: The sequence string to validate
-        residue_props: Dictionary mapping residue codes to properties
-    Returns:
-        None if valid, error message if invalid
-    """
+def validate_sequence(seq, residue_props):
+    """Validate a peptide sequence against known residue types."""
     seq = seq.strip().upper()
     if not seq:
         return "Sequence cannot be empty."

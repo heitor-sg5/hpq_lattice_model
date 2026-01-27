@@ -1,22 +1,15 @@
-from typing import Dict
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-def build_positions_from_step(step: Dict) -> pd.DataFrame:
+def build_positions_from_step(step):
     """Extract positions from trajectory step."""
     positions = step["positions"]
     df = pd.DataFrame(positions)
     df = df.sort_values("index")
     return df
 
-def build_color_values(
-    df_positions: pd.DataFrame,
-    residue_props: Dict,
-    local_energies: Dict[int, float],
-    sequence: str,
-    mode: str,
-) -> np.ndarray:
+def build_color_values(df_positions, residue_props, local_energies, sequence, mode):
     """Build color values array based on selected mode."""
     if mode == "Hydrophobicity":
         vals = np.array(
@@ -33,7 +26,7 @@ def build_color_values(
         vals = np.zeros(len(df_positions), dtype=float)
     return vals
 
-def plot_lattice_3d(step: Dict, residue_props: Dict, sequence: str, color_mode: str,) -> go.Figure:
+def plot_lattice_3d(step, residue_props, sequence, color_mode,):
     """Create 3D Plotly figure of lattice structure."""
     df_pos = build_positions_from_step(step)
     local_energies = step.get("local_energies", {})

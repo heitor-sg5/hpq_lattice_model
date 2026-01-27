@@ -1,25 +1,30 @@
 import math
 import random
+import copy
 from folding.moves import get_possible_moves, apply_move
 
 def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0.5):
-    """Metropolis Monte Carlo iteration, returning the complete trajectory."""
+    """Metropolis Monte Carlo iteration, returning the complete trajectory"""
     trajectory = []
 
+    min_energy = float("inf")
+    best_structure = None
+
     for step in range(n_steps):
-        # Exponential annealing (decrease temperature from T_start to T_end)
+        # Exponential annealing
         temperature = T_start * (T_end / T_start) ** (step / (n_steps - 1))
 
         # Generate all valid moves
         moves = get_possible_moves(chain)
         if not moves:
-            continue # skip if no moves possible
+            continue
+        num_moves = len(moves)
 
         # Pick a random move
         move = random.choice(moves)
         affected = move["cube_indices"]
 
-        # Save old positions for rollback if move rejected
+        # Save old positions for rollback
         old_positions = {i: chain.residues[i].position for i in affected}
 
         # Compute energies before move
@@ -33,32 +38,47 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
         new_energies = energy_model.compute_local_energies(chain)
         new_energy = energy_model.compute_total_energy(new_energies)
 
-        # Change in energy for affected residues
         delta_E = new_energy - old_energy
 
         accepted = True
-        # Metropolis acceptance criterion (using Boltzmann probability)
         if delta_E > 0 and random.random() >= math.exp(-delta_E / temperature):
             accepted = False
-            # Undo move if rejected
+            # Roll back
             for idx, pos in old_positions.items():
                 lattice.remove_cube(chain.residues[idx])
                 chain.residues[idx].set_position(pos)
                 lattice.add_cube(chain.residues[idx])
 
-        # Log step info including move type
+            total_energy = old_energy
+            local_energies = old_energies
+        else:
+            total_energy = new_energy
+            local_energies = new_energies
+
+        # Track lowest-energy structure
+        if total_energy < min_energy:
+            min_energy = total_energy
+            best_structure = copy.deepcopy(chain)
+
+        # Log step info
         trajectory.append({
             "step": step,
             "temperature": temperature,
             "delta_E": delta_E,
             "accepted": accepted,
             "move_type": move["type"],
-            "total_energy": new_energy if accepted else old_energy,
-            "local_energies": new_energies if accepted else old_energies,
+            "total_energy": total_energy,
+            "local_energies": local_energies,
+            "total_moves": num_moves,
             "positions": [
-                {"index": c.index, "x": c.position[0], "y": c.position[1], "z": c.position[2]}
+                {
+                    "index": c.index,
+                    "x": c.position[0],
+                    "y": c.position[1],
+                    "z": c.position[2],
+                }
                 for c in chain.residues
-            ]
+            ],
         })
 
-    return trajectory
+    return trajectory, best_structure

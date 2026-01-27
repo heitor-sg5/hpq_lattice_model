@@ -1,10 +1,9 @@
-from typing import List, Dict
 import numpy as np
 import plotly.graph_objects as go
 
 from analytics.trajectories import energy_trace_from_trajectory
 
-def plot_energy_vs_step_interactive(trajectory: List[Dict]) -> go.Figure:
+def plot_energy_vs_step_interactive(trajectory):
     """Plot energy vs step for a single trajectory."""
     df = energy_trace_from_trajectory(trajectory)
     fig = go.Figure()
@@ -24,7 +23,7 @@ def plot_energy_vs_step_interactive(trajectory: List[Dict]) -> go.Figure:
     )
     return fig
 
-def plot_energy_multi_runs(trajectories: List[List[Dict]]) -> go.Figure:
+def plot_energy_multi_runs(trajectories):
     """Plot energy vs step for multiple runs with mean and std."""
     min_len = min(len(t) for t in trajectories)
     energies = np.array(
