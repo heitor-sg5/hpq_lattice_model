@@ -68,13 +68,13 @@ def toolbar(residue_props):
                 "Charge-charge (εQQ)", value=float(params["eps_Q"]), key="eps_Q"
             )
             params["pivot_p"] = st.slider(
-                "Pivot move probability",
+                "Pivot probability",
                 min_value=0.0,
                 max_value=1.0,
                 value=float(params["pivot_p"]),
             )
             params["crankshaft_p"] = st.slider(
-                "Crankshaft move probability",
+                "Crankshaft probability",
                 min_value=0.0,
                 max_value=1.0,
                 value=float(params["crankshaft_p"]),

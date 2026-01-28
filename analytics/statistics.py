@@ -11,6 +11,10 @@ def compute_statistics_table(results, sequence):
         initial_energy = traj[0]["total_energy"] if traj else 0.0
         final_energy = r["final_energy"]
         min_energy = r["min_energy"]
+        min_step = None
+        if traj:
+            min_entry = min(traj, key=lambda s: s["total_energy"])
+            min_step = min_entry["step"]
         acceptance_rate = sum(1 for s in traj if s.get("accepted", False)) / len(traj) if traj else 0.0
         
         stats_data.append({
@@ -35,7 +39,7 @@ def compute_statistics_table(results, sequence):
         })
         stats_data.append({
             "Metric": "Minimum energy",
-            "Value": f"{min_energy:.3f}",
+            "Value": f"{min_energy:.3f} (Step: {min_step})",
         })
         stats_data.append({
             "Metric": "Energy change",
@@ -57,8 +61,26 @@ def compute_statistics_table(results, sequence):
         # Multiple runs (aggregate statistics)
         trajectories = [r["trajectory"] for r in results]
         runtimes = [r["runtime"] for r in results]
+
         final_energies = [r["final_energy"] for r in results]
+        best_final_idx = int(np.argmin(final_energies))
+        best_final_run = best_final_idx + 1
+        best_final_traj = trajectories[best_final_idx]
+        best_final_step = best_final_traj[-1]["step"] if best_final_traj else None
+
         min_energies = [r["min_energy"] for r in results]
+        best_min_energy = np.inf
+        best_min_run = None
+        best_min_step = None
+        for run_idx, traj in enumerate(trajectories):
+            if not traj:
+                continue
+            min_entry = min(traj, key=lambda s: s["total_energy"])
+            if min_entry["total_energy"] < best_min_energy:
+                best_min_energy = min_entry["total_energy"]
+                best_min_run = run_idx + 1
+                best_min_step = min_entry["step"]
+
         initial_energies = [t[0]["total_energy"] if t else 0.0 for t in trajectories]
         energy_changes = [fe - ie for fe, ie in zip(final_energies, initial_energies)]
         
@@ -94,7 +116,7 @@ def compute_statistics_table(results, sequence):
         })
         stats_data.append({
             "Metric": "Best final energy",
-            "Value": f"{np.min(final_energies):.3f}",
+            "Value": f"{np.min(final_energies):.3f} (Run: {best_final_run}, Step: {best_final_step})",
         })
         stats_data.append({
             "Metric": "Mean minimum energy",
@@ -102,7 +124,7 @@ def compute_statistics_table(results, sequence):
         })
         stats_data.append({
             "Metric": "Best minimum energy",
-            "Value": f"{np.min(min_energies):.3f}",
+            "Value": f"{np.min(min_energies):.3f} (Run: {best_min_run}, Step: {best_min_step})",
         })
         stats_data.append({
             "Metric": "Mean energy change",
