@@ -23,6 +23,7 @@ def run_simulations(residue_props):
             eps_PP=float(params["eps_PP"]),
             eps_Q=float(params["eps_Q"]),
             pivot_p=float(params["pivot_p"]),
+            crankshaft_p=float(params["crankshaft_p"])
         )
         results.append(r)
 
@@ -71,6 +72,12 @@ def toolbar(residue_props):
                 min_value=0.0,
                 max_value=1.0,
                 value=float(params["pivot_p"]),
+            )
+            params["crankshaft_p"] = st.slider(
+                "Crankshaft move probability",
+                min_value=0.0,
+                max_value=1.0,
+                value=float(params["crankshaft_p"]),
             )
 
         with cols[3]:

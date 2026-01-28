@@ -14,6 +14,7 @@ DEFAULT_PARAMS = {
     "eps_PP": 0.1,
     "eps_Q": 1.0,
     "pivot_p": 0.25,
+    "crankshaft_p": 0.5,
     "seed": 42,
     "runs": 1,
 }

@@ -1,11 +1,14 @@
 import random
 
 PIVOT_P = 0.25  # Probability of attempting a pivot move
+CRANKSHAFT_P = 0.5 # Probability of attempting a crankshaft move
 
-def set_pivot_probability(p):
-    """Set the global probability of attempting a pivot move."""
+def set_probabilities(p, c):
+    """Set the global probability of attempting pivot and crankshaft moves."""
     global PIVOT_P
     PIVOT_P = float(p)
+    global CRANKSHAFT_P
+    CRANKSHAFT_P = float(c)
 
 def are_adjacent(pos1, pos2):
     """Check if two lattice positions are adjacent."""
@@ -74,6 +77,18 @@ def get_possible_moves(chain):
                     "cube_indices": [c.index for c in downstream],
                     "new_positions": rotated_positions
                 })
+    
+    # Crankshaft moves: rotate two consecutive interior residues
+    if random.random() < PIVOT_P:
+        for i in range(1, n - 2):
+            new_positions = crankshaft_positions(chain, i, lattice)
+            if new_positions:
+                moves.append({
+                    "type": "crankshaft",
+                    "cube_indices": [i, i + 1],
+                    "new_positions": new_positions
+                })
+
     return moves
 
 def apply_move(chain, move):
@@ -131,3 +146,39 @@ def rotate_subchain(pivot_cube, subchain, lattice):
         current = next_pos
 
     return positions
+
+def crankshaft_positions(chain, i, lattice):
+    """Attempt a crankshaft move on residues i and i+1."""
+    residues = chain.residues
+
+    a = residues[i - 1].position
+    b = residues[i].position
+    c = residues[i + 1].position
+    d = residues[i + 2].position
+
+    # Endpoints must be adjacent (axis length = 2)
+    if not are_adjacent(a, d):
+        return None
+
+    # Vector directions
+    vb = (b[0] - a[0], b[1] - a[1], b[2] - a[2])
+    vc = (c[0] - d[0], c[1] - d[1], c[2] - d[2])
+
+    axis = random.choice([0, 1, 2])
+
+    vb_rot = rotate(vb, axis)
+    vc_rot = rotate(vc, axis)
+
+    new_b = (a[0] + vb_rot[0], a[1] + vb_rot[1], a[2] + vb_rot[2])
+    new_c = (d[0] + vc_rot[0], d[1] + vc_rot[1], d[2] + vc_rot[2])
+
+    # Must preserve chain connectivity
+    if not (are_adjacent(new_b, new_c)):
+        return None
+
+    # Must not overlap lattice
+    for pos in (new_b, new_c):
+        if lattice.is_occupied(pos):
+            return None
+
+    return [new_b, new_c]

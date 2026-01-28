@@ -6,7 +6,7 @@ from model.chain import PeptideChain
 from model.lattice import Lattice
 from folding.energy import EnergyModel
 from folding.relax import relax_chain
-from folding.moves import set_pivot_probability, PIVOT_P
+from folding.moves import set_probabilities, PIVOT_P, CRANKSHAFT_P
 
 def run_simulation(
     sequence,
@@ -25,6 +25,7 @@ def run_simulation(
     eps_Q=1.0,
     # Monte Carlo move settings
     pivot_p=None,
+    crankshaft_p=None
 ):
     """
     Run a single Monte Carlo simulation.
@@ -51,9 +52,9 @@ def run_simulation(
 
     # Allow runtime control of pivot move probability
     if pivot_p is not None:
-        set_pivot_probability(pivot_p)
+        set_probabilities(pivot_p, crankshaft_p)
     else:
-        set_pivot_probability(PIVOT_P)
+        set_probabilities(PIVOT_P, CRANKSHAFT_P)
 
     energy_model = EnergyModel(
         alpha=alpha,
