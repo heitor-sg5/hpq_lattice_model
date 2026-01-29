@@ -33,7 +33,7 @@ def plot_landscapes(results, smooth_sigma=2):
             E = step["total_energy"]
             Q = get_native_frequency(native_contacts, positions)
             N = total_neighbours(positions)
-            P = np.log10(step.get("total_moves", 1))
+            P = step.get("total_moves", 1)
 
             E_list.append(E)
             Q_list.append(Q)
