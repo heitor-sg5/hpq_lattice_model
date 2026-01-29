@@ -7,6 +7,9 @@ from ui.plots.landscape import plot_landscapes
 from ui.plots.moves import plot_moves_histogram_single, plot_moves_histogram_multi
 from ui.plots.contacts import contact_heatmap_from_runs, cladogram_from_runs
 
+def accepted_only(traj):
+    return [s for s in traj if s.get("accepted", False)]
+
 def analytics_panel():
     """Render analytics panel with tabs for different visualizations."""
     results = st.session_state.get("results", [])
@@ -17,11 +20,11 @@ def analytics_panel():
 
     with tabs[0]:
         if len(results) == 1:
-            traj = results[0]["trajectory"]
+            traj = accepted_only(results[0]["trajectory"])
             fig = plot_energy_vs_step_interactive(traj)
         else:
-            trajectories = [r["trajectory"] for r in results]
-            fig = plot_energy_multi_runs(trajectories)
+            trajectories = [accepted_only(r["trajectory"]) for r in results]
+            fig = plot_energy_multi_runs(trajectories)      
         st.plotly_chart(fig, use_container_width=True)
 
     with tabs[1]:
@@ -34,7 +37,8 @@ def analytics_panel():
         st.plotly_chart(fig, use_container_width=True)
 
     with tabs[2]:
-        fig = plot_landscapes(results)
+        accepted_results = [{**r, "trajectory": accepted_only(r["trajectory"])} for r in results]
+        fig = plot_landscapes(accepted_results)
         if fig is not None:
             st.plotly_chart(fig, use_container_width=True)
     

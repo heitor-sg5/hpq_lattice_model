@@ -93,7 +93,7 @@ def toolbar(residue_props):
                 "Seed", value=int(params["seed"]), step=1
             )
             params["runs"] = st.number_input(
-                "Runs", min_value=1, max_value=32, value=int(params["runs"]), step=1
+                "Runs", min_value=1, max_value=1000, value=int(params["runs"]), step=1
             )
 
         st.session_state["params"] = params

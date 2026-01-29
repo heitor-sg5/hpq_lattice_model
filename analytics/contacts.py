@@ -41,7 +41,6 @@ def contact_frequency_matrix(consensus, n_residues):
         M[i, j] = w
         M[j, i] = w  # enforce symmetry
     return M
-import itertools
 
 def get_native(structure):
     """Computes native contacts from a chain structure dict."""

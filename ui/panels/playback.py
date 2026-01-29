@@ -21,7 +21,7 @@ def playback_controls(current_trajectory):
     col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 3, 1, 1])
 
     with col1:
-        if st.button("⏮", key="playback_first", help="Jump to first step"):
+        if st.button("⏮", key="playback_first", help="First step"):
             idx = 0
             st.session_state["current_step_index"] = idx
             st.rerun()
@@ -31,7 +31,7 @@ def playback_controls(current_trajectory):
             st.session_state["current_step_index"] = idx
             st.rerun()
     with col3:
-        if st.button("📍", help="Jump to lowest energy step", key="playback_min_energy"):
+        if st.button("📍", help="Lowest energy step", key="playback_min_energy"):
             idx = min_energy_idx
             st.session_state["current_step_index"] = idx
             st.rerun()
@@ -41,7 +41,7 @@ def playback_controls(current_trajectory):
             st.session_state["current_step_index"] = idx
             st.rerun()
     with col6:
-        if st.button("⏭", key="playback_last", help="Jump to last step"):
+        if st.button("⏭", key="playback_last", help="Last step"):
             idx = n_steps - 1
             st.session_state["current_step_index"] = idx
             st.rerun()
@@ -64,12 +64,19 @@ def playback_controls(current_trajectory):
     st.caption(f"Current step: {current_trajectory[idx]['step']} / {current_trajectory[-1]['step']}")
 
 def sidebar_runs():
-    """Render run selector in sidebar."""
+    """Render run selector in sidebar as a dropdown."""
     results = st.session_state.get("results", [])
     if not results:
         st.info("Run a simulation to populate runs.")
         return
 
+    # Create labels for each run
     labels = [f"Run {i+1}" for i in range(len(results))]
-    selected = st.radio("Runs", labels, index=st.session_state["current_run_index"])
-    st.session_state["current_run_index"] = labels.index(selected)
+
+    # Get current index from session state, default to 0
+    current_index = st.session_state.get("current_run_index", 0)
+    current_index = min(current_index, len(labels) - 1)
+    selected_label = st.selectbox("Select run", labels, index=current_index)
+
+    # Update session state to reflect the selected run
+    st.session_state["current_run_index"] = labels.index(selected_label)

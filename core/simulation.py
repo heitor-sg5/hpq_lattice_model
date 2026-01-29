@@ -75,7 +75,14 @@ def run_simulation(
     structure = best_chain.get_structure()
     runtime = time.time() - start_time
 
-    move_types = [step["move_type"] for step in trajectory if "move_type" in step]
+    move_types = []
+    for step in trajectory:
+        if not step.get("accepted", False):
+            continue
+        move_type = step.get("move_type")
+        if move_type is None:
+            continue  # skip no-move steps
+        move_types.append(move_type)
     move_counts = Counter(move_types)
 
     total_energy = trajectory[-1]["total_energy"]
