@@ -3,6 +3,7 @@ from scipy.interpolate import griddata
 from scipy.ndimage import gaussian_filter
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
 from analytics.contacts import get_native, total_neighbours, get_native_frequency
 
 def plot_landscapes(results, smooth_sigma=2):
@@ -32,8 +33,8 @@ def plot_landscapes(results, smooth_sigma=2):
             positions = step["positions"]
             E = step["total_energy"]
             Q = get_native_frequency(native_contacts, positions)
-            N = total_neighbours(positions)
-            P = step.get("total_moves", 1)
+            N = np.log10(total_neighbours(positions) + 1)
+            P = np.log10(step.get("total_moves", 1) + 1)
 
             E_list.append(E)
             Q_list.append(Q)

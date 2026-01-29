@@ -1,6 +1,7 @@
 import math
 import random
 import copy
+
 from folding.moves import get_possible_moves, apply_move
 
 def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0.5):
