@@ -34,7 +34,7 @@ def landing_page():
             runs = st.number_input(
                 "Number of independent runs",
                 min_value=1,
-                max_value=32,
+                max_value=1000,
                 value=int(params["runs"]),
                 step=1,
             )
