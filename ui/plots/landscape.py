@@ -17,11 +17,11 @@ def plot_landscapes(results, smooth_sigma=2):
     # Determine native contacts and trajectories
     if single_run:
         traj = results[0]["trajectory"]
-        step_interval = 10
+        step_interval = 1
         native_contacts = get_native(results[0]["structure"])
         trajectories_to_use = [traj]
     else:
-        step_interval = 100
+        step_interval = 1
         best_run = min(results, key=lambda r: r["min_energy"])
         native_contacts = get_native(best_run["structure"])
         trajectories_to_use = [r["trajectory"] for r in results]
