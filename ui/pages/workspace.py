@@ -1,11 +1,25 @@
 import streamlit as st
 
 from ui.panels.toolbar import toolbar, run_simulations
-from ui.panels.playback import playback_controls, sidebar_runs
+from ui.panels.playback import sidebar_runs
 from ui.panels.analytics import analytics_panel
 from ui.panels.export import export_tools
 from ui.plots.lattice import plot_lattice_3d
 from utils.io import load_residue_props
+
+def get_best_step_for_run(result):
+    """
+    Return a step-like dict representing the lowest-energy conformation
+    for a given run.
+    """
+    best_step = result.get("best_step")
+    if best_step is not None:
+        return best_step
+
+    trajectory = result.get("trajectory", [])
+    if not trajectory:
+        return None
+    return min(trajectory, key=lambda s: s["total_energy"])
 
 def workspace():
     """Render main workspace with simulation controls and visualization."""
@@ -37,7 +51,6 @@ def workspace():
 
     current_run_idx = st.session_state["current_run_index"]
     current_result = results[current_run_idx]
-    trajectory = current_result["trajectory"]
 
     with cols[1]:
         color_mode = st.segmented_control(
@@ -47,17 +60,16 @@ def workspace():
         )
         st.session_state["color_mode"] = color_mode
 
-        if trajectory:
-            current_step_idx = st.session_state.get("current_step_index", 0)
-            current_step = trajectory[current_step_idx]
+        best_step = get_best_step_for_run(current_result)
+        if best_step is not None:
             fig = plot_lattice_3d(
-                current_step,
+                best_step,
                 residue_props=residue_props,
                 sequence=st.session_state.get("sequence", ""),
                 color_mode=color_mode,
             )
             st.plotly_chart(fig, use_container_width=True)
-            playback_controls(trajectory)
+            st.caption("Showing lowest-energy conformation for the selected run.")
         else:
             st.info("No trajectory recorded for this run.")
 

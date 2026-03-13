@@ -11,13 +11,13 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
     min_energy = float("inf")
     best_structure = None
 
+    # Compute initial energies for the starting conformation once.
+    old_energies = energy_model.compute_local_energies(chain)
+    old_energy = energy_model.compute_total_energy(old_energies)
+
     for step in range(n_steps):
         # Exponential annealing
         temperature = T_start * (T_end / T_start) ** (step / (n_steps - 1))
-
-        # Compute energies before move
-        old_energies = energy_model.compute_local_energies(chain)
-        old_energy = energy_model.compute_total_energy(old_energies)
 
         # Generate all valid moves
         moves = get_possible_moves(chain)
@@ -29,17 +29,7 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
                 "accepted": False,
                 "move_type": None,
                 "total_energy": old_energy,
-                "local_energies": old_energies,
                 "total_moves": 0,
-                "positions": [
-                    {
-                        "index": c.index,
-                        "x": c.position[0],
-                        "y": c.position[1],
-                        "z": c.position[2],
-                    }
-                    for c in chain.residues
-                ],
             })
             continue
         num_moves = len(moves)
@@ -71,10 +61,13 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
                     lattice.add_cube(chain.residues[idx])
 
                 total_energy = old_energy
-                local_energies = old_energies
         else:
             total_energy = new_energy
-            local_energies = new_energies
+
+        # If move was accepted, update reference energies for next step.
+        if accepted:
+            old_energies = new_energies
+            old_energy = new_energy
 
         # Track lowest-energy structure
         if total_energy < min_energy:
@@ -89,17 +82,7 @@ def relax_chain(chain, lattice, energy_model, n_steps=1000, T_start=2.0, T_end=0
             "accepted": accepted,
             "move_type": move["type"],
             "total_energy": total_energy,
-            "local_energies": local_energies,
             "total_moves": num_moves,
-            "positions": [
-                {
-                    "index": c.index,
-                    "x": c.position[0],
-                    "y": c.position[1],
-                    "z": c.position[2],
-                }
-                for c in chain.residues
-            ],
         })
 
     return trajectory, best_structure

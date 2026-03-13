@@ -72,7 +72,24 @@ def run_simulation(
         T_end=T_end,
     )
 
+    # Best (lowest-energy) conformation structure
     structure = best_chain.get_structure()
+
+    # Snapshot of the best conformation for visualization (single step)
+    best_local_energies = energy_model.compute_local_energies(best_chain)
+    best_positions = [
+        {
+            "index": c.index,
+            "x": c.position[0],
+            "y": c.position[1],
+            "z": c.position[2],
+        }
+        for c in best_chain.residues
+    ]
+    best_step = {
+        "positions": best_positions,
+        "local_energies": best_local_energies,
+    }
     runtime = time.time() - start_time
 
     move_types = []
@@ -95,5 +112,6 @@ def run_simulation(
         "move_counts": dict(move_counts),
         "runtime": runtime,
         "structure": structure,
+        "best_step": best_step,
         "trajectory": trajectory
     }

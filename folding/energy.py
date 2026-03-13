@@ -37,7 +37,7 @@ class EnergyModel:
             return self.alpha * cube.hydrophobicity * exposed
         return 0.0
 
-    def compute_contact_energy(self, cube, chain, lattice, seen_pairs=None):
+    def compute_contact_energy(self, cube, lattice, seen_pairs=None):
         """Compute contact energy contribution for a single residue."""
         energy = 0.0
         if seen_pairs is None:
@@ -45,7 +45,8 @@ class EnergyModel:
         for nbr_pos in lattice.get_neighbours(cube.position):
             if not lattice.is_occupied(nbr_pos):
                 continue
-            other = chain.get_cube_at(nbr_pos)
+            # lattice-level lookup for neighbour access
+            other = lattice.get_cube(nbr_pos)
             if other is None or abs(cube.index - other.index) <= 1:
                 continue
             pair = tuple(sorted((cube.index, other.index)))
@@ -66,7 +67,7 @@ class EnergyModel:
             # Solvent energy
             local[cube.index] += self.compute_solvent_energy(cube, lattice)
             # Contact energy
-            local[cube.index] += self.compute_contact_energy(cube, chain, lattice, seen_pairs)
+            local[cube.index] += self.compute_contact_energy(cube, lattice, seen_pairs)
         return local
     
     def compute_total_energy(self, local):
