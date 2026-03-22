@@ -228,12 +228,18 @@ Linear temperature decrease from $T_{start}$ to $T_{end}$ over total steps, with
 - Advanced options expander
 - "Start folding" button
 
+
+![Figure 1](screenshots/landing.jpg)
+
 ### Results Workspace
 - Summary statistics tables
 - Interactive 3D structure viewer
 - Trajectory plots with zooming/panning
 - Contact matrix visualization
 - Download buttons for data export
+
+
+![Figure 2](screenshots/workspace.jpg)
 
 ## Example Workflow
 
