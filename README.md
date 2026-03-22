@@ -168,35 +168,35 @@ The workspace provides multiple analysis views:
 
 ```
 hpq_lattice_model/
-├── core/                    # Core simulation logic
+├── core/
 │   ├── simulation.py       # Monte Carlo simulation runner
 │   ├── config.py          # Default parameters
 │   └── validation.py      # Input validation
-├── folding/                # Folding algorithms
+├── folding/
 │   ├── energy.py          # HPQ energy calculations
 │   ├── moves.py           # Monte Carlo move types
 │   └── relax.py           # Annealing and relaxation
-├── model/                  # Data structures
+├── model/
 │   ├── chain.py           # Peptide chain representation
 │   ├── cube.py            # Individual residue
 │   └── lattice.py         # 3D cubic lattice
-├── ui/                     # Streamlit interface
+├── ui/
 │   ├── state.py           # Session management
 │   ├── pages/
 │   │   ├── landing.py     # Input/configuration page
 │   │   └── workspace.py   # Results/analysis page
-│   └── panels/            # UI components
-├── analytics/              # Analysis and statistics
+│   └── panels/ 
+├── analytics/
 │   ├── statistics.py      # Energy and trajectory stats
 │   └── trajectories.py    # Trajectory processing
-├── plots/                  # Visualization components
+├── plots/ 
 │   ├── contacts.py        # Contact map plots
 │   ├── energy.py          # Energy plots
 │   ├── lattice.py         # 3D structure plots
 │   └── temperature.py     # Temperature plots
-├── utils/                  # Utilities
+├── utils/
 │   └── io.py              # File I/O helpers
-├── data/                   # Static data
+├── data/
 │   └── residues.json      # Amino acid properties
 └── app.py                  # Main entry point
 ```
@@ -228,7 +228,6 @@ Linear temperature decrease from $T_{start}$ to $T_{end}$ over total steps, with
 - Advanced options expander
 - "Start folding" button
 
-
 ![Figure 1](screenshots/landing.jpg)
 
 ### Results Workspace
@@ -238,12 +237,11 @@ Linear temperature decrease from $T_{start}$ to $T_{end}$ over total steps, with
 - Contact matrix visualization
 - Download buttons for data export
 
-
 ![Figure 2](screenshots/workspace.jpg)
 
 ## Example Workflow
 
-1. **Input sequence**: Enter desired peptide sequence (e.g., "METPVVPIIPKL")
+1. **Input sequence**: Enter desired peptide sequence (e.g., "FSSLKKVSSLTTVASSLKKV")
 2. **Configure**: 10 runs, 10000 steps, seed=42
 3. **Run simulation**: View 3D structures, energy distributions, contact patterns
 4. **Download data**: Export trajectories and statistics
