@@ -162,7 +162,6 @@ The workspace provides multiple analysis views:
 
 - **Trajectory CSV**: Time series of energies and structures
 - **Structure JSON**: Final conformations in structured format
-- **Statistics CSV**: Summary metrics across runs
 
 ## Project Structure
 
